@@ -1,0 +1,15 @@
+{
+  "name": "pathao-delivery-creator",
+  "version": "1.0.0",
+  "description": "Pathao Delivery Order Creator with Smart Parsing",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["pathao", "delivery", "order", "creator", "bangladesh"],
+  "author": "Your Name",
+  "license": "MIT"
+}
+
