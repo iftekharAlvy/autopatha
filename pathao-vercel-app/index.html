@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathao Delivery Order Creator</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            color: #e74c3c; 
+            text-align: center; 
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .section { 
+            margin-bottom: 30px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            background-color: #fafafa;
+        }
+        h2 { 
+            margin-top: 0; 
+            color: #2c3e50;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+            color: #34495e;
+        }
+        textarea, input[type="text"], select { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+            font-family: monospace;
+        }
+        button { 
+            background-color: #e74c3c; 
+            color: white; 
+            padding: 12px 25px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover { 
+            background-color: #c0392b; 
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        pre { 
+            background-color: #2c3e50; 
+            color: #ecf0f1;
+            padding: 15px; 
+            border-radius: 5px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #e74c3c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .example {
+            background-color: #e8f4fd;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .example h4 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+        .auto-refresh-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .parsing-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .parsing-info h4 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚚 Pathao Delivery Order Creator</h1>
+
+        <div class="section">
+            <h2>Customer Information</h2>
+            
+            <div class="parsing-info">
+                <h4>🧠 Smart Parsing Enabled!</h4>
+                <p>Our AI-powered parser can automatically detect customer information from any format. Just paste the text and it will intelligently extract:</p>
+                <ul>
+                    <li><strong>Name:</strong> Customer's full name</li>
+                    <li><strong>Phone:</strong> Mobile number (01xxxxxxxxx format)</li>
+                    <li><strong>Address:</strong> Delivery location</li>
+                    <li><strong>Amount:</strong> COD amount (in Taka)</li>
+                    <li><strong>Description:</strong> Product details</li>
+                    <li><strong>Instructions:</strong> Special delivery notes</li>
+                </ul>
+            </div>
+            
+            <div class="example">
+                <h4>Example Formats (any of these will work):</h4>
+                <pre>Ahmed Rahman
+01712345678
+House 10, Road 5, Gulshan, Dhaka
+500 taka
+T-shirt and jeans
+Call before delivery
+
+OR
+
+Customer: Fatima Khan
+Contact: 01987654321  
+Location: Flat 2B, Building 15, Dhanmondi
+COD: ৳750
+Items: Laptop bag
+Note: Handle with care
+
+OR
+
+Rashid Ahmed
+Phone 01555666777
+Deliver to House 25 Road 12 Uttara Dhaka
+Amount 1200
+Cotton shirt blue color
+Please call first</pre>
+            </div>
+            
+            <label for="customer-data">Paste Customer Information (any format):</label>
+            <textarea id="customer-data" placeholder="Paste customer information here in any format. Our smart parser will automatically detect name, phone, address, amount, etc."></textarea>
+            
+            <label for="store-selection">Select Store:</label>
+            <select id="store-selection">
+                <option value="32411">Sparkling arts and crafts (32411)</option>
+                <option value="45099">Fashmecca (45099)</option>
+                <option value="54186">Ki chai 2.0 (54186)</option>
+                <option value="32410">Fashion Pallate BD (32410)</option>
+                <option value="97625" selected>Fashion pallate BD (97625)</option>
+            </select>
+            
+            <button id="create-order-btn" onclick="createDeliveryOrder()">
+                <span id="loading-spinner" class="loading" style="display: none;"></span>
+                Create Delivery Order
+            </button>
+        </div>
+
+        <div class="section">
+            <h2>Order Result</h2>
+            <div class="auto-refresh-notice" id="auto-refresh-notice" style="display: none;">
+                ✅ Form will auto-refresh in <span id="countdown">3</span> seconds...
+            </div>
+            <div id="order-result"></div>
+            <pre id="order-details" style="display: none;"></pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/delivery';
+        let autoRefreshTimer = null;
+
+        function displayResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isSuccess ? 'success' : 'error';
+            
+            if (isSuccess && data.data) {
+                messageDiv.innerHTML = `
+                    <strong>✅ Order Created Successfully!</strong><br>
+                    <strong>Consignment ID:</strong> ${data.data.consignment_id}<br>
+                    <strong>Merchant Order ID:</strong> ${data.data.merchant_order_id}<br>
+                    <strong>Status:</strong> ${data.data.order_status}<br>
+                    <strong>Delivery Fee:</strong> ৳${data.data.delivery_fee}
+                `;
+                
+                // Show parsed data if available
+                if (data.parsed_data) {
+                    messageDiv.innerHTML += `<br><br><strong>📋 Parsed Information:</strong><br>`;
+                    if (data.parsed_data.name) messageDiv.innerHTML += `<strong>Name:</strong> ${data.parsed_data.name}<br>`;
+                    if (data.parsed_data.phone) messageDiv.innerHTML += `<strong>Phone:</strong> ${data.parsed_data.phone}<br>`;
+                    if (data.parsed_data.address) messageDiv.innerHTML += `<strong>Address:</strong> ${data.parsed_data.address}<br>`;
+                    if (data.parsed_data.amount) messageDiv.innerHTML += `<strong>Amount:</strong> ৳${data.parsed_data.amount}<br>`;
+                    if (data.parsed_data.description) messageDiv.innerHTML += `<strong>Description:</strong> ${data.parsed_data.description}<br>`;
+                    if (data.parsed_data.instructions) messageDiv.innerHTML += `<strong>Instructions:</strong> ${data.parsed_data.instructions}<br>`;
+                }
+                
+                // Start auto-refresh countdown
+                startAutoRefresh();
+                
+            } else if (isSuccess) {
+                messageDiv.innerHTML = `<strong>✅ Success:</strong> ${data.message || JSON.stringify(data)}`;
+            } else {
+                messageDiv.innerHTML = `<strong>❌ Error:</strong> ${data.message || data.error || JSON.stringify(data)}`;
+            }
+            
+            element.appendChild(messageDiv);
+            
+            // Show detailed JSON response
+            const detailsElement = document.getElementById('order-details');
+            detailsElement.textContent = JSON.stringify(data, null, 2);
+            detailsElement.style.display = 'block';
+        }
+
+        function setLoading(isLoading) {
+            const button = document.getElementById('create-order-btn');
+            const spinner = document.getElementById('loading-spinner');
+            
+            if (isLoading) {
+                button.disabled = true;
+                spinner.style.display = 'inline-block';
+                button.innerHTML = '<span id="loading-spinner" class="loading"></span>Creating Order...';
+            } else {
+                button.disabled = false;
+                spinner.style.display = 'none';
+                button.innerHTML = 'Create Delivery Order';
+            }
+        }
+
+        function startAutoRefresh() {
+            const notice = document.getElementById('auto-refresh-notice');
+            const countdown = document.getElementById('countdown');
+            let seconds = 3;
+            
+            notice.style.display = 'block';
+            countdown.textContent = seconds;
+            
+            autoRefreshTimer = setInterval(() => {
+                seconds--;
+                countdown.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(autoRefreshTimer);
+                    refreshForm();
+                }
+            }, 1000);
+        }
+
+        function refreshForm() {
+            // Clear the form
+            document.getElementById('customer-data').value = '';
+            document.getElementById('order-result').innerHTML = '';
+            document.getElementById('order-details').style.display = 'none';
+            document.getElementById('auto-refresh-notice').style.display = 'none';
+            
+            // Focus back to the textarea
+            document.getElementById('customer-data').focus();
+            
+            // Clear any existing timer
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
+            }
+        }
+
+        async function createDeliveryOrder() {
+            const customerData = document.getElementById('customer-data').value.trim();
+            const storeId = document.getElementById('store-selection').value;
+            
+            if (!customerData) {
+                displayResult('order-result', { error: 'Please enter customer information' }, false);
+                return;
+            }
+
+            // Clear any existing auto-refresh timer
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
+            }
+            document.getElementById('auto-refresh-notice').style.display = 'none';
+
+            setLoading(true);
+            
+            try {
+                const response = await fetch(API_BASE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        customer_data: customerData,
+                        store_id: parseInt(storeId)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                }
+                
+                displayResult('order-result', data, true);
+                
+            } catch (error) {
+                displayResult('order-result', { error: error.message }, false);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Allow Enter key to submit (Ctrl+Enter for new line in textarea)
+        document.getElementById('customer-data').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                createDeliveryOrder();
+            }
+        });
+
+        // Cancel auto-refresh if user starts typing
+        document.getElementById('customer-data').addEventListener('input', function() {
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
+                document.getElementById('auto-refresh-notice').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
